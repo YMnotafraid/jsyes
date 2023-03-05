@@ -18,6 +18,9 @@ Promise.myallsettled([
   Promise.reject(3),
   4,
 ]).then(
-  (res) => console.log(res),
+  (res) => console.log(res), //   { status: 'fulfilled', value: 1 },
+  //   { status: 'fulfilled', value: 2 },
+  //   { status: 'rejected', reason: 3 },
+  //   { status: 'fulfilled', value: 4 }
   (rej) => console.log(rej)
 );
