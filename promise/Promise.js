@@ -2,13 +2,13 @@ function Promise(executor) {
   this.state = "pending";
   this.value = undefined;
   this.reason = undefined;
+  let _this = this;
 
   try {
     executor(resolve, reject);
   } catch (error) {
     reject(error);
   }
-  let _this = this;
   function resolve(value) {
     if ((_this.state = "pending")) {
       _this.state = "resolved";
@@ -22,3 +22,19 @@ function Promise(executor) {
     }
   }
 }
+Promise.prototype.then = function (onFulfilled, onRejected) {
+  if (this.state === "resolved") {
+    if (typeof onFulfilled === "function") {
+      onFulfilled(this.value);
+    }
+  }
+  if (this.state === "rejected") {
+    if (typeof onRejected === "function") {
+      onRejected(this.reason);
+    }
+  }
+};
+const p = new Promise((resolve, reject) => {
+  resolve(0);
+});
+p.then((res) => console.log(res));
