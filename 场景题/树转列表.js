@@ -33,9 +33,9 @@ const data = [
 
 function tree2list(data) {
   const res = [];
-  const dfs = (tree) => {
-    if (!tree.length) return;
-    tree.forEach((item) => {
+  const dfs = (data) => {
+    if (!data.length) return;
+    data.forEach((item) => {
       if (item.children) {
         dfs(item.children);
         delete item.children;
