@@ -126,18 +126,3 @@ function resolvePromise(promise2, x, resolve, reject) {
     resolve(x);
   }
 }
-
-new Promise((resolve) => {
-  resolve(1);
-})
-  .then((res) => {
-    console.log(res);
-    return new Promise((resolve) => {
-      resolve(
-        new Promise((resolve) => {
-          resolve(11);
-        })
-      );
-    });
-  })
-  .then((res) => console.log(res));
