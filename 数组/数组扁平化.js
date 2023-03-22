@@ -16,3 +16,11 @@ function flatArr(arr) {
   return res;
 }
 console.log(flatArr(arr));
+
+//reduce
+function flatArrReduce(arr) {
+  return arr.reduce((pre, cur) => {
+    return Array.isArray(cur) ? [...pre, ...flatArrReduce(cur)] : [...pre, cur];
+  }, []);
+}
+console.log(flatArrReduce(arr));
