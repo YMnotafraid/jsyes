@@ -11,5 +11,16 @@ function uniqueArr(arr) {
   }
   return [...map.entries()].map((i) => i[0]);
 }
+//filter
+function uniqueArr1(arr) {
+  arr.filter((item, index) => arr.indexOf(item) === index);
+}
+//reduce
+function uniqueArr2(arr) {
+  return arr.reduce((pre, cur) => {
+    if (!pre.includes(cur)) pre.push(cur);
+    return pre;
+  }, []);
+}
 
-console.log(uniqueArr(arr));
+console.log(uniqueArr2(arr));
