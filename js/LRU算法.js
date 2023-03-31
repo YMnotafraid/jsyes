@@ -37,6 +37,7 @@
 // lruCache6.toString();
 
 //map + 双链表
+//优化点：删除操作时间复杂度实现o(1)
 function LinkNode(key, val) {
   this.val = val;
   this.key = key;
