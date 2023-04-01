@@ -1,3 +1,4 @@
+//lc合并两个有序数组核心思想
 function mergeSort(arr) {
   if (arr.length < 2) return arr;
   const len = arr.length;
