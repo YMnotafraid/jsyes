@@ -8,6 +8,7 @@ function debounce(fn, time) {
     }, time);
   };
 }
+
 //节流
 function throttle(fn, time) {
   let t1 = 0;
