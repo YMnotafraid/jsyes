@@ -1,11 +1,11 @@
 const mydeepClone = (target, map = new WeakMap()) => {
-  if (typeof target !== "object" || typeof target === "null") return target;
+  if (typeof target !== "object" || target === "null") return target;
   const constructor = target.constructor;
-  if (/^Date|Function|RegExp|Set|Map$/i.test(constructor.name)) {
+  if (/^Date|Function|Set|Map|RegExp$/i.test(constructor.name)) {
     return new constructor(target);
   }
   const cloneTarget = Array.isArray(target) ? [] : {};
-  if (map.get(target)) {
+  if (map.has(target)) {
     return map.get(target);
   }
   map.set(target, cloneTarget);
