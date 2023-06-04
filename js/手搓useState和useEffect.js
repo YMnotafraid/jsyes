@@ -25,7 +25,7 @@ const MyReact = (function () {
     useState(initialValue) {
       hooks[currentHook] = hooks[currentHook] || initialValue; // type: any
       const setStateHookIndex = currentHook; // 为了setState引用正确的闭包
-      //因为在MyReact.render()调用之后currentHook会置为0
+      //因为在MyReact.render()调用之后currentHook会置为0，代码第9行
       //所以如果是我们定义const setState = (newState) => (hooks[currentHook] = newState)
       //无论调用哪一个useState这种hook都会修改到第一个hook维护的状态
       //const setStateHookIndex = currentHook;可以记住当前hook维护的是hooks中的哪个状态
