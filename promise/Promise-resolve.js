@@ -11,5 +11,17 @@ Promise.myresolve = (value) => {
     }
   });
 };
+
+Promise.myresolve = (value) => {
+  if (value instanceof Promise) return value;
+  return new Promise((resolve, reject) => {
+    if (value && typeof value.then === "function") {
+      value.then(resolve, reject);
+    } else {
+      resolve(value);
+    }
+  });
+};
+
 const obj = { then: (resolve) => resolve("xx") };
 Promise.myresolve(obj).then((res) => console.log(res));

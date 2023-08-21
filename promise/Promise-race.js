@@ -1,7 +1,23 @@
-Promise.myrace = (promises) => {
+// Promise.myrace = (promises) => {
+//   return new Promise((resolve, reject) => {
+//     for (let promise of promises) {
+//       Promise.resolve(promise).then(resolve, reject);
+//     }
+//   });
+// };
+
+// Promise.myrace = (ps) => {
+//   return new Promise((resolve, reject) => {
+//     for (let p of ps) {
+//       Promise.resolve(p).then(resolve, reject);
+//     }
+//   });
+// };
+
+Promise.myrace = (ps) => {
   return new Promise((resolve, reject) => {
-    for (let promise of promises) {
-      Promise.resolve(promise).then(resolve, reject);
+    for (let p of ps) {
+      Promise.resolve(p).then(resolve, reject);
     }
   });
 };

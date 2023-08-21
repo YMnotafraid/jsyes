@@ -28,8 +28,31 @@ class EventEmiter {
   }
 }
 
+class e {
+  constructor() {
+    this.cache = {};
+  }
+  on(name, fn) {
+    if (this.cache[name]) {
+      this.cache[name].push(fn);
+    } else this.cache[name] = [fn];
+  }
+  off(name, fn) {
+    const index = this.cache[name].findIndex((f) => f === fn);
+    if (index >= 0) {
+      this.cache[name].splice(index, 1);
+    }
+  }
+  emit(name, once = false, ...args) {
+    if (this.cache[name]) {
+      this.cache[name].forEach((fn) => fn(...args));
+      once && delete this.cache[name];
+    }
+  }
+}
+
 //test
-let eventsBus = new EventEmiter();
+let eventsBus = new e();
 const f1 = (name, age) => {
   console.log("f1", name, age);
 };

@@ -66,12 +66,15 @@
 
     function lazyload() {
         let viewPortHeight = window.innerHeight || document.documentElement.clientHeight;
+        console.log(viewPortHeight);
         let index = 0;
         for (let i = index; i < imgList.length; i++) {
             let distance = viewPortHeight - imgList[i].getBoundingClientRect().top;
+
             if (distance >= 0) {
                 imgList[i].setAttribute("src", imgList[i].getAttribute("data-src"));
             }
+            index = i + 1;
         }
     }
 

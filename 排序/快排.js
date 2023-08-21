@@ -9,8 +9,7 @@ function quickSort(data) {
   }
   return [...quickSort(left), cur, ...quickSort(right)];
 }
-
 //test
 const arr = [98, 42, 25, 54, 15, 3, 25, 72, 41, 10, 121];
 console.log(quickSort(arr));
-console.log(arr);
+console.log(qs(arr));

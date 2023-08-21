@@ -8,12 +8,12 @@ function yellow() {
   console.log("yellow");
 }
 function light(color, time) {
-  return new Promise((r) =>
+  return new Promise((r) => {
     setTimeout(() => {
       r();
       color();
-    }, time)
-  );
+    }, time);
+  });
 }
 async function step() {
   await light(red, 3000);

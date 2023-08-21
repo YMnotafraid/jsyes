@@ -4,7 +4,7 @@ function shuffle(arr) {
   let len = arr.length;
   while (len) {
     let t = ~~(Math.random() * len--);
-    [arr[len], arr[t]] = [arr[t], arr[len]];
+    [arr[t], arr[len]] = [arr[len], arr[t]];
   }
   return arr;
 }

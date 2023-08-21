@@ -1,4 +1,4 @@
-const arr = [98, 42, 25, 54, 15, 3, 25, 72, 41, 10, 121];
+const arr = [98, 42, 25, 54, 125, 3, 25, 72, 41, 10, 121];
 
 function heapSort(arr) {
   let len = arr.length;

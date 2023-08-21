@@ -7,6 +7,7 @@ Function.prototype.myapply = function (context, args) {
   delete context[key];
   return res;
 };
+
 Function.prototype.mycall = function (context, ...args) {
   context = context || window;
   args = args || [];

@@ -1,3 +1,4 @@
+//美团笔试
 const nums = [3, 1, 2, 7, 10, 2, 4];
 const dp = Array(nums.length).fill(0);
 let res = 0;

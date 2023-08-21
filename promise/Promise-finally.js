@@ -11,6 +11,32 @@ Promise.prototype.myfinally = function (callback) {
   );
 };
 
+Promise.prototype.myfinally = function (callback) {
+  return this.then(
+    async (res) => {
+      await callback();
+      return res;
+    },
+    async (err) => {
+      await callback();
+      throw err;
+    }
+  );
+};
+
+Promise.prototype.myfinally = function (callback) {
+  return this.then(
+    async (res) => {
+      await callback();
+      return res;
+    },
+    async (err) => {
+      await callback();
+      throw err;
+    }
+  );
+};
+
 Promise.resolve(123)
   .then((res) => {
     console.log(res); //123
@@ -23,7 +49,7 @@ Promise.resolve(123)
   .then(
     () => {},
     (err) => {
-      console.log(err); //123
+      console.log(err); //456
       return 789;
     }
   )
