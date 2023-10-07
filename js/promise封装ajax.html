@@ -37,6 +37,30 @@
             })
         })
     }
+
+    function ma(options) {
+        const xhr = new XMLHttpRequest();
+        const data = options.data;
+        const type = (options.type || "GET").toUpperCase();
+        const url = options.url;
+        xhr.open(type, url, true);
+
+        if (type === "GET") {
+            xhr.send();
+        } else {
+            xhr.send(data);
+        }
+
+        xhr.addEventListener("readystatechange", () => {
+            if (this.readyState === 4) {
+                if (this.status >= 200 && this.status < 300) {
+                    resolve(this.responseText, this.responseType)
+                } else {
+                    reject(this.responseType)
+                }
+            }
+        })
+    }
     const obj = {
         url: "https://dog.ceo/api/breeds/image/random",
         data: null,

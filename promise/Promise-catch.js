@@ -1,3 +1,7 @@
-Promise.prototype.mycatch = (callback) => {
-  return this.then(null, callback); //catch本质就是then第二个回调函数的语法糖
-};
+Promise.prototype.mycatch = function(callback) {
+    return this.then(null, callback);
+}
+Promise.reject(1).mycatch(err => {
+    console.log(err);
+    return 112;
+}).then(res => console.log(res))

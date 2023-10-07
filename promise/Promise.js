@@ -1,128 +1,147 @@
-function Promise(executor) {
-  this.state = "pending";
-  this.value = undefined;
-  this.reason = undefined;
-  // 保存成功回调
-  this.onResolvedCallbacks = [];
-  // 保存失败回调
-  this.onRejectedCallbacks = [];
-
-  let _this = this;
-  try {
-    executor(resolve, reject);
-  } catch (error) {
-    reject(error);
-  }
-
-  function resolve(value) {
-    if (_this.state === "pending") {
-      _this.state = "resolved";
-      _this.value = value;
-      _this.onResolvedCallbacks.forEach((cb) => cb(value));
+class MyPromise {
+    constructor(executor) {
+        this.initBind();
+        this.initValue();
+        try {
+            executor(this.resolve, this.reject);
+        } catch (error) {
+            this.reject(error);
+        }
     }
-  }
-  function reject(reason) {
-    if (_this.state === "pending") {
-      _this.state = "rejected";
-      _this.reason = reason;
-      _this.onRejectedCallbacks.forEach((cb) => cb(reason));
+    initBind() {
+        //初始化this
+        this.resolve = this.resolve.bind(this);
+        this.reject = this.reject.bind(this);
     }
-  }
+    initValue() {
+        this.PromiseResult = null;
+        this.PromiseState = 'pending';
+        this.onFulfilledCallbacks = [];
+        this.onRejectedCallbacks = [];
+    }
+    resolve(value) {
+        if (this.PromiseState !== 'pending') return;
+        this.PromiseState = 'fulfilled';
+        this.PromiseResult = value;
+        while (this.onFulfilledCallbacks.length) {
+            this.onFulfilledCallbacks.shift()(this.PromiseResult);
+        }
+    }
+    reject(reason) {
+        if (this.PromiseState !== 'pending') return;
+        this.PromiseState = 'rejected';
+        this.PromiseResult = reason;
+        while (this.onRejectedCallbacks.length) {
+            this.onRejectedCallbacks.shift()(this.PromiseResult);
+        }
+    }
+    then(onFulfilled, onRejected) {
+        onFulfilled = typeof onFulfilled === "function" ? onFulfilled : (value) => value;
+        onRejected = typeof onRejected === "function" ? onRejected : (error) => { throw error };
+
+        var thenPromise = new MyPromise((resolve, reject) => {
+            const resolvePromise = (cb) => {
+                queueMicrotask(() => {
+                    try {
+                        const x = cb(this.PromiseResult);
+                        if (x === thenPromise) {
+                            throw new Error('不能返回自身')
+                        }
+                        if (x instanceof MyPromise) {
+                            x.then(resolve, reject);
+                        } else {
+                            resolve(x);
+                        }
+                    } catch (error) {
+                        reject(error);
+                        throw new Error(err);
+                    }
+                })
+            }
+            if (this.PromiseState === "fulfilled") {
+                resolvePromise(onFulfilled);
+            } else if (this.PromiseState === "rejected") {
+                resolvePromise(onRejected);
+            } else if (this.PromiseState === "pending") {
+                this.onFulfilledCallbacks.push(resolvePromise.bind(this, onFulfilled));
+                this.onRejectedCallbacks.push(resolvePromise.bind(this, onRejected));
+            }
+        })
+        return thenPromise
+    }
 }
 
-Promise.prototype.then = function (onFulfilled, onRejected) {
-  onFulfilled =
-    typeof onFulfilled === "function" ? onFulfilled : (value) => value;
-  onRejected =
-    typeof onRejected === "function"
-      ? onRejected
-      : (err) => {
-          throw err;
-        };
 
-  let promise2 = new Promise((resolve, reject) => {
-    // 等待态判断，此时异步代码还未走完，回调入数组队列
-    if (this.state === "pending") {
-      this.onResolvedCallbacks.push(() => {
-        queueMicrotask(() => {
-          try {
-            let x = onFulfilled(this.value);
-            resolvePromise(promise2, x, resolve, reject);
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
-
-      this.onRejectedCallbacks.push(() => {
-        queueMicrotask(() => {
-          try {
-            let x = onRejected(this.value);
-            resolvePromise(promise2, x, resolve, reject);
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
-    }
-    if (this.state === "resolved") {
-      queueMicrotask(() => {
+class mPromise {
+    constructor(executor) {
+        initValue();
+        initBind();
         try {
-          let x = onFulfilled(this.value);
-          resolvePromise(promise2, x, resolve, reject);
-        } catch (e) {
-          reject(e);
+            executor(this.resolve, this.reject);
+        } catch (error) {
+            this.reject(error);
         }
-      });
     }
-    if (this.state === "rejected") {
-      queueMicrotask(() => {
-        try {
-          let x = onRejected(this.reason);
-          resolvePromise(promise2, x, resolve, reject);
-        } catch (e) {
-          reject(e);
+    initBind() {
+        this.resolve = this.resolve.bind(this);
+        this.reject = this.reject.bind(this);
+    }
+    initValue() {
+        this.PromiseResult = null;
+        this.PromiseState = "pending";
+        this.onFulfilledCallbacks = [];
+        this.onRejectedCallbacks = [];
+    }
+    resolve(value) {
+        if (this.PromiseState !== "pending") return;
+        this.PromiseResult = value;
+        this.PromiseState = "fulfilled";
+        while (this.onFulfilledCallbacks.length) {
+            this.onFulfilledCallbacks.shift()(this.PromiseResult);
         }
-      });
     }
-  });
-  return promise2;
-};
+    reject(reason) {
+        if (this.PromiseState !== "pending") return;
+        this.PromiseResult = reason;
+        this.PromiseState = "rejected";
+        while (this.onRejectedCallbacks.length) {
+            this.onRejectedCallbacks.shift()(this.PromiseResult);
+        }
+    }
+    then(onFulfilled, onRejected) {
+        typeof onFulfilled === "function" ? onFulfilled : (value) => value;
+        typeof onRejected === "function" ? onRejected : (err) => { throw err }
+        const thenPromise = new Promise((res, rej) => {
+            const resolvePromise = (cb) => {
+                const x = cb(this.PromiseResult);
+                if (x === thenPromise) {
+                    throw error('不能返回自身')
+                } else if (x instanceof Promise) {
+                    x.then(res, rej);
+                } else {
+                    res(x);
+                }
+            }
+            if (this.PromiseState === "fulfilled") {
+                resolvePromise(onFulfilled);
+            } else if (this.PromiseState === "rejected") {
+                resolvePromise(onRejected);
+            } else {
+                this.onFulfilledCallbacks.push(resolvePromise.bind(this, onFulfilled));
+                this.onRejectedCallbacks.push(resolvePromise.bind(this, onRejected));
+            }
+        })
+        return thenPromise;
+    }
 
-function resolvePromise(promise2, x, resolve, reject) {
-  if (promise2 === x) {
-    reject(new TypeError("请避免Promise循环引用"));
-  }
-  let called;
-  if (x !== null && (typeof x === "object" || typeof x === "function")) {
-    // 可能是个对象或是函数
-    try {
-      let then = x.then;
-      if (typeof then === "function") {
-        then.call(
-          x,
-          (y) => {
-            if (called) return;
-            called = true;
-            // 递归调用，传入y若是Promise对象，继续循环
-            resolvePromise(promise2, y, resolve, reject);
-          },
-          (r) => {
-            if (called) return;
-            called = true;
-            reject(r);
-          }
-        );
-      } else {
-        resolve(x);
-      }
-    } catch (e) {
-      if (called) return;
-      called = true;
-      reject(e);
-    }
-  } else {
-    // 普通值结束递归
-    resolve(x);
-  }
+
 }
+
+const test4 = new mPromise((resolve, reject) => {
+    resolve(1)
+})
+
+test4.then(res => console.log(res));
+test4.then(res => console.log(res));
+
+console.log(2)
